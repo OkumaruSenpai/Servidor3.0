@@ -14,7 +14,7 @@ app.get('/obtener-script', async (req, res) => {
 
   try {
     const response = await axios.get(
-      'https://api.github.com/repos/OkumaruSenpai/Sytem2.0/contents/LUAU',
+      'https://api.github.com/repos/OkumaruSenpai/ServidorDTS/contents/BiteSpider',
       {
         headers: {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,
