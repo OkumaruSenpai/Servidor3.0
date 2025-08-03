@@ -14,7 +14,7 @@ app.get('/RetroScript', async (req, res) => {
 
   try {
     const response = await axios.get(
-      'https://api.github.com/repos/OkumaruSenpai/ServidorDTS/contents/BiteSpider',
+      'https://raw.githubusercontent.com/OkumaruSenpai/ServidorDTS/refs/heads/main/BiteSpider',
       {
         headers: {
           Authorization: `token ${process.env.GITHUB_TOKEN}`,
