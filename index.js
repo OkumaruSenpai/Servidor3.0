@@ -5,23 +5,41 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Ruta que obtiene un archivo Lua desde una carpeta del repo
 app.get('/obtener-script', async (req, res) => {
   const apiKey = req.headers['x-api-key'];
-  console.log('Petición recibida con API Key:', apiKey);
-
   if (apiKey !== process.env.API_KEY) {
-    console.log('API Key inválida');
     return res.status(401).send('No autorizado');
   }
 
   try {
-    const url = 'https://raw.githubusercontent.com/OkumaruSenpai/ServidorDTS/main/BiteSpider/script.lua';
-    console.log('Solicitando script a:', url);
+    // URL para listar archivos en la carpeta LUAU
+    const githubApiUrl = 'https://api.github.com/repos/OkumaruSenpai/ServidorDTS/contents/BiteSpider';
 
-    const response = await axios.get(url);
+    // 1. Obtener lista de archivos
+    const listResponse = await axios.get(githubApiUrl, {
+      headers: {
+        'User-Agent': 'MyScriptLoader/1.0'
+      }
+    });
 
-    console.log('Script obtenido exitosamente');
-    res.send(response.data);
+    const archivos = listResponse.data;
+
+    // 2. Buscar el primer archivo .lua (o el que tú quieras)
+    const primerLua = archivos.find(file => file.name.endsWith('.lua'));
+
+    if (!primerLua || !primerLua.download_url) {
+      return res.status(404).send('No se encontró archivo .lua en LUAU');
+    }
+
+    // 3. Descargar el archivo usando download_url
+    const scriptResponse = await axios.get(primerLua.download_url, {
+      headers: {
+        'User-Agent': 'MyScriptLoader/1.0'
+      }
+    });
+
+    res.send(scriptResponse.data);
   } catch (error) {
     console.error('Error al obtener el script:', error.message);
     res.status(500).send('Error al obtener el script');
