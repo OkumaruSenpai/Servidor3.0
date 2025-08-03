@@ -18,16 +18,16 @@ app.get('/obtener-script', async (req, res) => {
     const url = 'https://raw.githubusercontent.com/OkumaruSenpai/ServidorDTS/main/BiteSpider/script.lua';
     console.log('Solicitando script a:', url);
 
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `token ${process.env.GITHUB_TOKEN}`
-      }
-    });
+    const response = await axios.get(url);
 
     console.log('Script obtenido exitosamente');
     res.send(response.data);
   } catch (error) {
-    console.error('Error al obtener el script:', error);
+    console.error('Error al obtener el script:', error.message);
     res.status(500).send('Error al obtener el script');
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
